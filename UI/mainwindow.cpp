@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     load_flag = false;
     m_pLayout = new QGridLayout();
+    analyzeMode = BITRATE_MODE_NULL;
 
     //click Menu group signal and slot
     connect(ui->menubar,SIGNAL(triggered(QAction*)),this,SLOT(On_ClickedMenuActionGroup(QAction *)));
@@ -51,7 +52,8 @@ void MainWindow::On_ClickedMenuActionGroup(QAction *action)
             m_tooltip = nullptr;
         }
         // creat chart of bitrate
-        creat_bitrate_chart(FRAME_OF_BITRATE);
+        analyzeMode = FRAME_OF_BITRATE;
+        creat_bitrate_chart();
     } else if (action->text().compare("GOP of Bitrate")==0) { // GOP of bitrate
         if (filename != "" && !load_flag) {
             variable_init();
@@ -62,7 +64,8 @@ void MainWindow::On_ClickedMenuActionGroup(QAction *action)
             m_tooltip = nullptr;
         }
         // creat chart of bitrate
-        creat_bitrate_chart(GOP_OF_BITRATE);
+        analyzeMode = GOP_OF_BITRATE;
+        creat_bitrate_chart();
     } else if (action->text().compare("Second of Bitrate")==0) { // Second of bitrate
         if (filename != "" && !load_flag) {
             variable_init();
@@ -73,7 +76,8 @@ void MainWindow::On_ClickedMenuActionGroup(QAction *action)
             m_tooltip = nullptr;
         }
         // creat chart of bitrate
-        creat_bitrate_chart(SECOND_OF_BITRATE);
+        analyzeMode = SECOND_OF_BITRATE;
+        creat_bitrate_chart();
     } else {
 
     }
@@ -90,7 +94,7 @@ void MainWindow::variable_init()
     memset(&info,0,sizeof(info));
 }
 
-void MainWindow::creat_bitrate_chart(BitrateMode mode){
+void MainWindow::creat_bitrate_chart(){
 
     // bitrate average
     float bitrate_average = 0.0;
@@ -101,18 +105,18 @@ void MainWindow::creat_bitrate_chart(BitrateMode mode){
 
     // mode and pace for bitrate statistic
     unsigned int face = 0;
-    if (mode == GOP_OF_BITRATE) {
+    if (analyzeMode == GOP_OF_BITRATE) {
         face = info.gop_size;
-    } else if (mode == FRAME_OF_BITRATE) {
+    } else if (analyzeMode == FRAME_OF_BITRATE) {
         face = 1;
-    } else if (mode == SECOND_OF_BITRATE) {
+    } else if (analyzeMode == SECOND_OF_BITRATE) {
         face = (int)(info.fps * 10 + 5) / 10;
     } else {
         face = 0;
     }
 
     // set bitrate value to barset
-    QBarSet *barSet = new QBarSet("bitrate");
+    QBarSet *barSet = new QBarSet("Bitrate");
     unsigned int quotient = PacketList.size() / face;
     unsigned int remainde = PacketList.size() % face;
     float bitrate_tmp = 0;
@@ -163,7 +167,20 @@ void MainWindow::creat_bitrate_chart(BitrateMode mode){
 
     // set chartview to scrollarea
     m_pLayout->addWidget(m_chartView);
-    ui->workscroll->setLayout(m_pLayout);
+    ui->workscroll_widget->setLayout(m_pLayout);
+
+    // set stream info
+   ui->streamFormatLabel->setText("Format:  " + QString(info.codec_name));
+   ui->streamLevelLabel->setText("Level:  " + QString::number(info.level));
+   ui->streamFPSLabel->setText("FPS:  " + QString::number(info.fps));
+   ui->streamPixFmtLabel->setText("Pix_fmt:  " + QString(info.pix_fmt));
+   ui->streamWidthLabel->setText("Width:  " + QString::number(info.width));
+   ui->streamHightLabel->setText("Height:  " + QString::number(info.height));
+   ui->streamCountLabel->setText("Frame_count:  " + QString::number(info.frame_count));
+   ui->streamBitrateLabel->setText("Bitrate:  " + QString::number(bitrate_average));
+   ui->streamMaxBitrateLabel->setText("Max_bitrate:  " + QString::number(info.max_bitrate));
+   ui->streamMinBitrateLabel->setText("Min_bitrate:  " + QString::number(info.min_bitrate));
+   ui->streamGOPLabel->setText("GOP:  " + QString::number(info.gop_size));
 }
 
 /*
@@ -194,10 +211,10 @@ void MainWindow::sltTooltip(bool status, int index, QBarSet *barset)
         m_tooltip->move(pointLabel.x(),pointLabel.y() - m_tooltip->height()*1.5);
         m_tooltip->show();
 
-        //ui->frameIndexLabel->setText("Index:  " + QString::number(index));
-        //ui->frameBitrateLabel->setText("Bitrate:  " + sText);
-        //if (bitratemode == FRAME_OF_BITRATE) ui->framePictTypeLabe->setText("Pict_type:  " + frameArr[index].pict_type);
-        //if (bitratemode == FRAME_OF_BITRATE) ui->framePktSizeLable->setText("Pkt_size:  " + QString::number(frameArr[index].pkt_size));
+        ui->frameIndexLabel->setText("Index:  " + QString::number(index));
+        ui->frameBitrateLabel->setText("Bitrate:  " + sText);
+        if (analyzeMode == FRAME_OF_BITRATE) ui->framePicttypeLabel->setText("Pict_type:  " + QString(PacketList[index].pict_type));
+        if (analyzeMode == FRAME_OF_BITRATE) ui->framePktSizeLabel->setText("Pkt_size:  " + QString::number(PacketList[index].pkt_size));
 
     } else {
         m_tooltip->hide();

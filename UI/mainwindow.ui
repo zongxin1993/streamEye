@@ -6,87 +6,180 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1202</width>
-    <height>689</height>
+    <width>958</width>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QScrollArea" name="workscroll">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>160</y>
-      <width>971</width>
-      <height>471</height>
-     </rect>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>969</width>
-       <height>469</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QScrollArea" name="framescroll">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>20</y>
-      <width>971</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="widgetResizable">
-     <bool>true</bool>
-    </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>969</width>
-       <height>119</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QTableView" name="streamInfoTable">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>191</width>
-      <height>301</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTableView" name="workInfoTable">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>330</y>
-      <width>191</width>
-      <height>301</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QScrollArea" name="framescroll">
+        <property name="minimumSize">
+         <size>
+          <width>900</width>
+          <height>121</height>
+         </size>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents_2">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>930</width>
+           <height>123</height>
+          </rect>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="streamFormatLabel">
+            <property name="text">
+             <string>Format:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="streamWidthLabel">
+            <property name="text">
+             <string>Width:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="streamMaxBitrateLabel">
+            <property name="text">
+             <string>Max_btrate:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="frameIndexLabel">
+            <property name="text">
+             <string>Index:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="streamPixFmtLabel">
+            <property name="text">
+             <string>Pix_fmt:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="streamHightLabel">
+            <property name="text">
+             <string>Height:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="streamMinBitrateLabel">
+            <property name="text">
+             <string>Min_bitrate: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel" name="frameBitrateLabel">
+            <property name="text">
+             <string>Bitrate:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="streamLevelLabel">
+            <property name="text">
+             <string>Level:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="streamCountLabel">
+            <property name="text">
+             <string>Frame_count:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QLabel" name="streamGOPLabel">
+            <property name="text">
+             <string>GOP:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QLabel" name="framePktSizeLabel">
+            <property name="text">
+             <string>Pkt_size:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="streamFPSLabel">
+            <property name="text">
+             <string>FPS:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="streamBitrateLabel">
+            <property name="text">
+             <string>Bitrate:  </string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="3">
+           <widget class="QLabel" name="framePicttypeLabel">
+            <property name="text">
+             <string>Pict_type:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="workscroll">
+        <property name="minimumSize">
+         <size>
+          <width>900</width>
+          <height>471</height>
+         </size>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="workscroll_widget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>930</width>
+           <height>469</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1202</width>
+     <width>958</width>
      <height>22</height>
     </rect>
    </property>

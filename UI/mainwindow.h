@@ -27,7 +27,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-enum BitrateMode {
+enum AnalyzeMode {
    BITRATE_MODE_NULL,
    GOP_OF_BITRATE,
    FRAME_OF_BITRATE,
@@ -56,8 +56,8 @@ private:
     bool load_flag;
     StreamInfo info;
     vector<StreamFrames> PacketList;
-
+    AnalyzeMode analyzeMode;
     void variable_init(void);
-    void creat_bitrate_chart(BitrateMode mode);
+    void creat_bitrate_chart();
 };
 #endif // MAINWINDOW_H

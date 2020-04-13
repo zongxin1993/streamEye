@@ -148,18 +148,12 @@ static int open_input_file(InputFile *ifile, const char *filename)
     int scan_all_pmts_set = 0;
 
     fmt_ctx = avformat_alloc_context();
-    if (!fmt_ctx) {
-//        print_error(filename, AVERROR(ENOMEM));
-//        exit_program(1);
-    }
-
     if (!av_dict_get(format_opts, "scan_all_pmts", NULL, AV_DICT_MATCH_CASE)) {
         av_dict_set(&format_opts, "scan_all_pmts", "1", AV_DICT_DONT_OVERWRITE);
         scan_all_pmts_set = 1;
     }
     if ((err = avformat_open_input(&fmt_ctx, filename,
                                    iformat, &format_opts)) < 0) {
-//        print_error(filename, err);
         return err;
     }
     ifile->fmt_ctx = fmt_ctx;
@@ -181,7 +175,6 @@ static int open_input_file(InputFile *ifile, const char *filename)
         av_freep(&opts);
 
         if (err < 0) {
-//            print_error(filename, err);
             return err;
         }
     }
@@ -271,7 +264,6 @@ static av_always_inline int process_frame(InputFile *ifile,
     AVSubtitle sub;
     int ret = 0, got_frame = 0;
 
-//    clear_log(1);
     if (dec_ctx && dec_ctx->codec) {
         switch (par->codec_type) {
         case AVMEDIA_TYPE_VIDEO:
@@ -312,11 +304,7 @@ static av_always_inline int process_frame(InputFile *ifile,
     if (got_frame) {
         int is_sub = (par->codec_type == AVMEDIA_TYPE_SUBTITLE);
         nb_streams_frames[pkt->stream_index]++;
-//        if (do_show_frames)
-//            if (is_sub)
-//                show_subtitle(w, &sub, ifile->streams[pkt->stream_index].st, fmt_ctx);
-//            else
-//                show_frame(w, frame, ifile->streams[pkt->stream_index].st, fmt_ctx);
+
         StreamFrames tmp;
         tmp.pkt_size = frame->pkt_size;
         tmp.pict_type = av_get_picture_type_char(frame->pict_type);
@@ -357,11 +345,7 @@ static void read_interval_packets(InputFile *ifile,const ReadInterval *interval,
             target = interval->start;
         }
 
-//        av_log(NULL, AV_LOG_VERBOSE, "Seeking to read interval start point %s\n",
-//               av_ts2timestr(target, &AV_TIME_BASE_Q));
         if ((ret = avformat_seek_file(fmt_ctx, -1, -INT64_MAX, target, INT64_MAX, 0)) < 0) {
-//            av_log(NULL, AV_LOG_ERROR, "Could not seek to position %"PRId64": %s\n",
-//                   interval->start, av_err2str(ret));
             goto end;
         }
     }
@@ -377,52 +361,43 @@ static void read_interval_packets(InputFile *ifile,const ReadInterval *interval,
             REALLOCZ_ARRAY_STREAM(nb_streams_packets, nb_streams, fmt_ctx->nb_streams);
             REALLOCZ_ARRAY_STREAM(selected_streams,   nb_streams, fmt_ctx->nb_streams);
             nb_streams = fmt_ctx->nb_streams;
-          //  qDebug("5555");
+
         }
-       // qDebug() << selected_streams[pkt.stream_index];
-       // if (selected_streams[pkt.stream_index]) {
-        if (1) {
-            AVRational tb = ifile->streams[pkt.stream_index].st->time_base;
 
-            if (pkt.pts != AV_NOPTS_VALUE)
-                *cur_ts = av_rescale_q(pkt.pts, tb, AV_TIME_BASE_Q);
 
-            if (!has_start && *cur_ts != AV_NOPTS_VALUE) {
-                start = *cur_ts;
-                has_start = 1;
-            }
+        AVRational tb = ifile->streams[pkt.stream_index].st->time_base;
 
-            if (has_start && !has_end && interval->end_is_offset) {
-                end = start + interval->end;
-                has_end = 1;
-            }
+        if (pkt.pts != AV_NOPTS_VALUE)
+            *cur_ts = av_rescale_q(pkt.pts, tb, AV_TIME_BASE_Q);
 
-            if (interval->end_is_offset && interval->duration_frames) {
-                if (frame_count >= interval->end)
-                    break;
-            } else if (has_end && *cur_ts != AV_NOPTS_VALUE && *cur_ts >= end) {
+        if (!has_start && *cur_ts != AV_NOPTS_VALUE) {
+            start = *cur_ts;
+            has_start = 1;
+        }
+
+        if (has_start && !has_end && interval->end_is_offset) {
+            end = start + interval->end;
+            has_end = 1;
+        }
+
+        if (interval->end_is_offset && interval->duration_frames) {
+            if (frame_count >= interval->end)
                 break;
-            }
-            int packet_new = 1;
-            while (process_frame(ifile, frame, &pkt, &packet_new, PacketList) > 0);
+        } else if (has_end && *cur_ts != AV_NOPTS_VALUE && *cur_ts >= end) {
+            break;
         }
+        int packet_new = 1;
+        while (process_frame(ifile, frame, &pkt, &packet_new, PacketList) > 0);
+
         av_packet_unref(&pkt);
     }
     av_packet_unref(&pkt);
-    //Flush remaining frames that are cached in the decoder
-//    for (i = 0; i < fmt_ctx->nb_streams; i++) {
-//        pkt.stream_index = i;
-//        if (do_read_frames)
-//            while (process_frame(ifile, frame, &pkt, &(int){1}) > 0);
-//    }
 
 end:
     av_frame_free(&frame);
     if (ret < 0) {
         av_log(NULL, AV_LOG_ERROR, "Could not read packets in interval ");
-//        log_read_interval(interval, NULL, AV_LOG_ERROR);
     }
-//    return ret;
 }
 
 
